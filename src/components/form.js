@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-
+import icon from "../images/icon-error.svg";
 export default function FormPart() {
   const {
     register,
@@ -11,16 +11,87 @@ export default function FormPart() {
   return (
     <FormWrapper>
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Input placeholder="First Name" {...register("First Name")} />
+        <Div>
+          <Input
+            placeholder="First Name"
+            {...register("FirstName", {
+              required: "First Name cannot be empty",
+            })}
+            style={{
+              border: errors.FirstName
+                ? "2px solid #FF7979"
+                : "1px solid #dedede",
+            }}
+          />
 
-        <Input
-          placeholder="Last Name"
-          {...register("Last Name", { required: true })}
-        />
-        {errors.exampleRequired && <span>This field is required</span>}
-        <Input placeholder="Email Address" {...register("Email Address")} />
+          {errors.FirstName && (
+            <>
+              <ErrorMessage>{errors.FirstName.message}</ErrorMessage>
+              <ErrorIcon />
+            </>
+          )}
+        </Div>
 
-        <Input placeholder="Password" {...register("Password")} />
+        <Div>
+          <Input
+            placeholder="Last Name"
+            {...register("LastName", { required: "Last Name cannot be empty" })}
+            style={{
+              border: errors.LastName
+                ? "2px solid #FF7979"
+                : "1px solid #dedede",
+            }}
+          />
+
+          {errors.LastName && (
+            <>
+              <ErrorMessage>{errors.LastName.message}</ErrorMessage>
+              <ErrorIcon />
+            </>
+          )}
+        </Div>
+
+        <Div>
+          <Input
+            placeholder="Email Address"
+            {...register("Email", {
+              required: "Email cannot be empty",
+              pattern: {
+                value:
+                  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                message: "Looks like this not an email",
+              },
+            })}
+            style={{
+              border: errors.Email ? "2px solid #FF7979" : "1px solid #dedede",
+            }}
+          />
+
+          {errors.Email && (
+            <>
+              <ErrorMessage>{errors.Email.message}</ErrorMessage>
+              <ErrorIcon />
+            </>
+          )}
+        </Div>
+
+        <Div>
+          <Input
+            placeholder="Password"
+            {...register("Password", { required: "Password cannot be empty" })}
+            style={{
+              border: errors.Password
+                ? "2px solid #FF7979"
+                : "1px solid #dedede",
+            }}
+          />
+          {errors.Password && (
+            <>
+              <ErrorMessage>{errors.Password.message}</ErrorMessage>
+              <ErrorIcon />
+            </>
+          )}
+        </Div>
 
         <Button type="submit">CLAIM YOUR FREE TRIAL</Button>
       </Form>
@@ -32,6 +103,13 @@ export default function FormPart() {
   );
 }
 
+const Div = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+`;
 const FormWrapper = styled.section`
   background: #ffffff;
   box-shadow: 0px 8px 0px rgba(0, 0, 0, 0.14688);
@@ -52,6 +130,18 @@ const Form = styled.form`
   flex-direction: column;
   gap: 16px;
   width: 100%;
+  @media (min-width: 1440px) {
+    gap: 20;
+  }
+`;
+
+const ErrorMessage = styled.span`
+  font-style: italic;
+  font-size: 11px;
+  line-height: 16px;
+  text-align: right;
+  color: #ff7979;
+  margin: 0;
 `;
 
 const Input = styled.input`
@@ -64,7 +154,6 @@ const Input = styled.input`
   line-height: 26px;
   letter-spacing: 0.25px;
   color: #3d3b48;
-  border: 1px solid #dedede;
   border-radius: 5px;
 `;
 
@@ -91,4 +180,13 @@ const Conditions = styled.span`
   line-height: 21px;
   color: #bab7d4;
   letter-spacing: 1.5px;
+`;
+
+const ErrorIcon = styled.div`
+  background-image: url(${icon});
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  right: 20px;
+  top: 16px;
 `;
